@@ -15,7 +15,7 @@ const DEFAULT_EXTENSIONS = /\.(m?[jt]sx?)$/;
  * evaluates `fn(...)` calls at build time, and inlines the results
  * as static values.
  */
-export function macroPlugin(options?: MacroPluginOptions): Plugin {
+export function macros(options?: MacroPluginOptions): Plugin {
 	const filter = options?.filter ?? ((id: string) => DEFAULT_EXTENSIONS.test(id));
 
 	return {

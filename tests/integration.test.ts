@@ -5,7 +5,7 @@ import path from 'node:path';
 import { rolldown } from 'rolldown';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { macroPlugin } from '../src/index.js';
+import { macros } from '../src/index.js';
 
 const FIXTURES_DIR = path.resolve(__dirname, 'fixtures');
 
@@ -30,7 +30,7 @@ async function bundleAndGetCode(entryCode: string): Promise<string> {
 
 	const build = await rolldown({
 		input: entryPath,
-		plugins: [macroPlugin()],
+		plugins: [macros()],
 	});
 
 	const { output } = await build.generate({ format: 'esm' });
