@@ -29,6 +29,10 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -37,6 +41,8 @@
   },
   "devDependencies": {
     "@types/node": "^25.5.2",
+    "oxfmt": "^0.44.0",
+    "oxlint": "^1.59.0",
     "rolldown": "^1.0.0-rc.14",
     "tsdown": "^0.21.7",
     "typescript": "^6.0.2",

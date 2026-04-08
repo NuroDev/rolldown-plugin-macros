@@ -1,0 +1,62 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "plugins": ["import", "typescript"],
+  "rules": {
+    "array-type": [
+      "warn",
+      {
+        "default": "generic"
+      }
+    ],
+    "arrow-body-style": [
+      "warn",
+      "as-needed",
+      {
+        "requireReturnForObjectLiteral": false
+      }
+    ],
+    "consistent-generic-constructors": "warn",
+    "consistent-type-definitions": ["warn", "interface"],
+    "curly": "off",
+    "default-param-last": "error",
+    "eqeqeq": "warn",
+    "func-style": [
+      "error",
+      "declaration",
+      {
+        "allowArrowFunctions": true
+      }
+    ],
+    "id-length": "off",
+    "import/no-named-export": "off",
+    "import/no-unassigned-import": "off",
+    "jsx-a11y/no-autofocus": "off",
+    "max-statements": "off",
+    "no-default-export": "off",
+    "no-else-return": "error",
+    "no-inferrable-types": "error",
+    "no-magic-numbers": "off",
+    "no-param-reassign": "error",
+    "no-shadow": "error",
+    "no-ternary": "off",
+    "no-unnecessary-template-expression": "error",
+    "prefer-as-const": "error",
+    "prefer-enum-initializers": "error",
+    "prefer-object-spread": "off",
+    "prefer-template": "warn",
+    "react/no-array-index-key": "warn",
+    "react/react-in-jsx-scope": "off",
+    "react/self-closing-comp": "error",
+    "sort-imports": "off",
+    "sort-keys": "warn",
+    "triple-slash-reference": "off",
+    "unicorn/filename-case": ["error", { "case": "kebabCase" }],
+    "unicorn/no-lonely-if": "error",
+    "unicorn/no-nested-ternary": "error",
+    "unicorn/switch-case-braces": "error"
+  }
+}
