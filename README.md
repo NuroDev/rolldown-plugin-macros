@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> This project is 100% AI generated as a proof-of-concept and should not be used in production.
+
 # rolldown-plugin-macros
 
 Rolldown plugin for Bun-compatible build macros using import attributes.
