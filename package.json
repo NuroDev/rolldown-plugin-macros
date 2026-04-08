@@ -1,0 +1,45 @@
+{
+  "name": "rolldown-plugin-macros",
+  "version": "0.0.1",
+  "description": "Rolldown plugin for Bun-compatible build macros using import attributes",
+  "type": "module",
+  "license": "MIT",
+  "author": "Ben",
+  "keywords": [
+    "build-macros",
+    "bun-macros",
+    "import-attributes",
+    "macros",
+    "plugin",
+    "rolldown"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {
+    "rolldown": ">=1.0.0-rc.14"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "rolldown": "^1.0.0-rc.14",
+    "tsdown": "^0.21.7",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.3"
+  }
+}
