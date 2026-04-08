@@ -15,11 +15,11 @@ bun add -D rolldown-plugin-macros
 
 ```ts
 // rolldown.config.ts
-import { macroPlugin } from 'rolldown-plugin-macros';
+import { macros } from 'rolldown-plugin-macros';
 
 export default {
 	input: 'src/index.ts',
-	plugins: [macroPlugin()],
+	plugins: [macros()],
 };
 ```
 
@@ -70,7 +70,7 @@ The macro import is removed entirely, and each call is replaced with the inlined
 ## Options
 
 ```ts
-macroPlugin({
+macros({
 	// Custom file filter. Defaults to .js/.ts/.jsx/.tsx/.mjs/.mts files.
 	filter: (id) => id.endsWith('.ts'),
 });
