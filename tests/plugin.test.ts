@@ -1,6 +1,7 @@
 import path from 'node:path';
-import { describe, expect, it } from 'vitest';
+
 import { parseAst } from 'rolldown/parseAst';
+import { describe, expect, it } from 'vitest';
 
 import { collectMacroCallsites, collectMacroImports } from '../src/analyze.js';
 import { evaluateStaticExpression, serializeToSource } from '../src/evaluate.js';
@@ -76,9 +77,7 @@ describe('collectMacroImports', () => {
 		const code = `import * as macros from './macros' with { type: 'macro' };`;
 		const ast = parseAst(code);
 
-		expect(() => collectMacroImports(ast)).toThrow(
-			'Namespace import',
-		);
+		expect(() => collectMacroImports(ast)).toThrow('Namespace import');
 	});
 
 	it('should handle multiple macro imports from different modules', () => {
@@ -327,9 +326,7 @@ describe('serializeToSource', () => {
 	});
 
 	it('should serialize objects', () => {
-		expect(serializeToSource({ a: 1, b: 'two' })).toBe(
-			'{"a": 1, "b": "two"}',
-		);
+		expect(serializeToSource({ a: 1, b: 'two' })).toBe('{"a": 1, "b": "two"}');
 	});
 
 	it('should serialize nested structures', () => {

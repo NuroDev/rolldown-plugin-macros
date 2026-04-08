@@ -1,4 +1,4 @@
 {
-  "recommendations": ["oven.bun-vscode", "oxc.oxc-vscode"],
-  "unwantedRecommendations": []
+	"recommendations": ["oven.bun-vscode", "oxc.oxc-vscode"],
+	"unwantedRecommendations": []
 }

@@ -15,8 +15,8 @@ bun add -D rolldown-plugin-macros
 import { macroPlugin } from 'rolldown-plugin-macros';
 
 export default {
-    input: 'src/index.ts',
-    plugins: [macroPlugin()],
+	input: 'src/index.ts',
+	plugins: [macroPlugin()],
 };
 ```
 
@@ -27,14 +27,14 @@ export default {
 ```js
 // macros.js
 export function greet(name) {
-    return `Hello, ${name}!`;
+	return `Hello, ${name}!`;
 }
 
 export function getConfig(env) {
-    return {
-        debug: env === 'development',
-        version: '1.0.0',
-    };
+	return {
+		debug: env === 'development',
+		version: '1.0.0',
+	};
 }
 ```
 
@@ -50,8 +50,8 @@ const config = getConfig('production');
 ### Build output
 
 ```js
-const message = "Hello, world!";
-const config = {"debug": false, "version": "1.0.0"};
+const message = 'Hello, world!';
+const config = { debug: false, version: '1.0.0' };
 ```
 
 The macro import is removed entirely, and each call is replaced with the inlined return value.
@@ -68,25 +68,25 @@ The macro import is removed entirely, and each call is replaced with the inlined
 
 ```ts
 macroPlugin({
-    // Custom file filter. Defaults to .js/.ts/.jsx/.tsx/.mjs/.mts files.
-    filter: (id) => id.endsWith('.ts'),
+	// Custom file filter. Defaults to .js/.ts/.jsx/.tsx/.mjs/.mts files.
+	filter: (id) => id.endsWith('.ts'),
 });
 ```
 
 ## Supported patterns
 
-| Pattern | Supported |
-| --- | --- |
-| `import { fn } from './m' with { type: 'macro' }` | Yes |
-| `import fn from './m' with { type: 'macro' }` | Yes (default export) |
-| `import { fn as alias } from './m' with { type: 'macro' }` | Yes |
-| `fn("string", 42, true, null)` | Yes (literal args) |
-| `fn([1, 2, 3])` | Yes (array args) |
-| `fn({ key: "value" })` | Yes (object args) |
-| `fn(-42)` | Yes (unary +/-/!) |
-| `fn()` | Yes (no args) |
-| Async macro functions | Yes |
-| Source maps | Yes |
+| Pattern                                                    | Supported            |
+| ---------------------------------------------------------- | -------------------- |
+| `import { fn } from './m' with { type: 'macro' }`          | Yes                  |
+| `import fn from './m' with { type: 'macro' }`              | Yes (default export) |
+| `import { fn as alias } from './m' with { type: 'macro' }` | Yes                  |
+| `fn("string", 42, true, null)`                             | Yes (literal args)   |
+| `fn([1, 2, 3])`                                            | Yes (array args)     |
+| `fn({ key: "value" })`                                     | Yes (object args)    |
+| `fn(-42)`                                                  | Yes (unary +/-/!)    |
+| `fn()`                                                     | Yes (no args)        |
+| Async macro functions                                      | Yes                  |
+| Source maps                                                | Yes                  |
 
 ## Limitations (PoC scope)
 
@@ -97,7 +97,7 @@ This is a proof-of-concept. The following are not supported:
 - **Dynamic arguments** — only statically evaluable arguments are allowed. Variable references, function calls, or expressions are rejected.
 - **Non-serializable returns** — macro functions must return JSON-serializable values (plus `undefined` and `bigint`). Functions, symbols, etc. will throw.
 - **Spread arguments** — `fn(...args)` is not supported.
-- **Template literals with expressions** — `` fn(`${x}`) `` is rejected (plain template strings are fine).
+- **Template literals with expressions** — ``fn(`${x}`)`` is rejected (plain template strings are fine).
 - **Computed property keys** — `fn({ [key]: value })` is rejected.
 - **Module side effects** — macro modules are imported and executed at build time. Side effects in the macro module will run during the build.
 - **Watch mode cache invalidation** — the macro module cache is cleared at `buildStart` but not on individual file changes within a build.
@@ -107,6 +107,7 @@ This is a proof-of-concept. The following are not supported:
 This plugin implements the same `with { type: 'macro' }` import attribute syntax as [Bun's build macros](https://bun.sh/docs/bundler/macros). The intent is to allow the same macro source files to work with both Bun's bundler and Rolldown.
 
 Key differences from Bun:
+
 - Bun evaluates macros in a Bun-specific runtime; this plugin uses Node's `import()`.
 - Bun supports additional patterns (e.g., `JSX` return values) that are not covered here.
 - Bun's macro execution has access to Bun-specific APIs; this plugin runs macros in a standard Node.js environment.

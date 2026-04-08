@@ -1,2 +1,2 @@
-export { macroPlugin } from "./plugin";
-export type { MacroPluginOptions } from "./types";
+export { macroPlugin } from './plugin';
+export type { MacroPluginOptions } from './types';

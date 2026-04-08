@@ -1,77 +1,73 @@
-import type {
-  CallExpression,
-  ImportDeclaration,
-  Program,
-} from "@oxc-project/types";
+import type { CallExpression, ImportDeclaration, Program } from '@oxc-project/types';
 
-import type { MacroBinding, MacroCallsite, MacroImportInfo } from "./types";
-import { evaluateStaticExpression } from "./evaluate";
+import { evaluateStaticExpression } from './evaluate';
+import type { MacroBinding, MacroCallsite, MacroImportInfo } from './types';
 
 /**
  * Checks whether an ImportDeclaration has `with { type: 'macro' }`.
  */
 function isMacroImport(node: ImportDeclaration): boolean {
-  return node.attributes.some((attr) => {
-    const key = attr.key.type === "Identifier" ? attr.key.name : attr.key.value;
-    return key === "type" && attr.value.value === "macro";
-  });
+	return node.attributes.some((attr) => {
+		const key = attr.key.type === 'Identifier' ? attr.key.name : attr.key.value;
+		return key === 'type' && attr.value.value === 'macro';
+	});
 }
 
 /**
  * Collect all macro import declarations from the AST.
  */
 export function collectMacroImports(ast: Program): Array<MacroImportInfo> {
-  const imports: Array<MacroImportInfo> = [];
+	const imports: Array<MacroImportInfo> = [];
 
-  for (const node of ast.body) {
-    if (node.type !== "ImportDeclaration") continue;
-    if (!isMacroImport(node)) continue;
+	for (const node of ast.body) {
+		if (node.type !== 'ImportDeclaration') continue;
+		if (!isMacroImport(node)) continue;
 
-    const moduleSpecifier = node.source.value;
-    const bindings: Array<MacroBinding> = [];
+		const moduleSpecifier = node.source.value;
+		const bindings: Array<MacroBinding> = [];
 
-    for (const spec of node.specifiers) {
-      switch (spec.type) {
-        case "ImportSpecifier": {
-          const exportedName =
-            spec.imported.type === "Identifier"
-              ? spec.imported.name
-              : spec.imported.value;
-          bindings.push({
-            exportedName,
-            localName: spec.local.name,
-            moduleSpecifier,
-          });
-          break;
-        }
-        case "ImportDefaultSpecifier": {
-          bindings.push({
-            exportedName: "default",
-            localName: spec.local.name,
-            moduleSpecifier,
-          });
-          break;
-        }
-        case "ImportNamespaceSpecifier": {
-          // Namespace imports are not supported for macros — the user
-          // must use named imports so we can identify individual callsites.
-          throw new Error(
-            `[macros] Namespace import (import * as ...) is not supported for macro modules. ` +
-              `Use named imports instead: import { fn } from '${moduleSpecifier}' with { type: 'macro' }`,
-          );
-        }
-      }
-    }
+		for (const spec of node.specifiers) {
+			switch (spec.type) {
+				case 'ImportSpecifier': {
+					const exportedName =
+						spec.imported.type === 'Identifier'
+							? spec.imported.name
+							: spec.imported.value;
+					bindings.push({
+						exportedName,
+						localName: spec.local.name,
+						moduleSpecifier,
+					});
+					break;
+				}
+				case 'ImportDefaultSpecifier': {
+					bindings.push({
+						exportedName: 'default',
+						localName: spec.local.name,
+						moduleSpecifier,
+					});
+					break;
+				}
+				case 'ImportNamespaceSpecifier': {
+					// Namespace imports are not supported for macros — the user
+					// must use named imports so we can identify individual callsites.
+					throw new Error(
+						`[macros] Namespace import (import * as ...) is not supported for macro modules. ` +
+							`Use named imports instead: import { fn } from '${moduleSpecifier}' with { type: 'macro' }`,
+					);
+				}
+			}
+		}
 
-    imports.push({
-      bindings,
-      end: node.end,
-      moduleSpecifier,
-      start: node.start,
-    });
-  }
+		imports.push({
+			bindings,
+			end: node.end,
+			moduleSpecifier,
+			start: node.start,
+		});
+	}
 
-  return imports;
+	return imports;
 }
 
 /**
@@ -83,17 +79,17 @@ export function collectMacroImports(ast: Program): Array<MacroImportInfo> {
  * is an Identifier matching one of the macro local names.
  */
 export function collectMacroCallsites(
-  ast: Program,
-  bindings: Array<MacroBinding>,
+	ast: Program,
+	bindings: Array<MacroBinding>,
 ): Array<MacroCallsite> {
-  const bindingMap = new Map<string, MacroBinding>();
-  for (const b of bindings) {
-    bindingMap.set(b.localName, b);
-  }
+	const bindingMap = new Map<string, MacroBinding>();
+	for (const b of bindings) {
+		bindingMap.set(b.localName, b);
+	}
 
-  const callsites: Array<MacroCallsite> = [];
-  walkForCallExpressions(ast, bindingMap, callsites);
-  return callsites;
+	const callsites: Array<MacroCallsite> = [];
+	walkForCallExpressions(ast, bindingMap, callsites);
+	return callsites;
 }
 
 /**
@@ -102,58 +98,58 @@ export function collectMacroCallsites(
  * into an array and the visitor pattern is fire-and-forget.
  */
 function walkForCallExpressions(
-  node: unknown,
-  bindingMap: Map<string, MacroBinding>,
-  callsites: Array<MacroCallsite>,
+	node: unknown,
+	bindingMap: Map<string, MacroBinding>,
+	callsites: Array<MacroCallsite>,
 ): void {
-  if (node === null || node === undefined || typeof node !== "object") return;
+	if (node === null || node === undefined || typeof node !== 'object') return;
 
-  if (Array.isArray(node)) {
-    for (const child of node) {
-      walkForCallExpressions(child, bindingMap, callsites);
-    }
+	if (Array.isArray(node)) {
+		for (const child of node) {
+			walkForCallExpressions(child, bindingMap, callsites);
+		}
 
-    return;
-  }
+		return;
+	}
 
-  const record = node as Record<string, unknown>;
-  const type = record["type"] as string | undefined;
+	const record = node as Record<string, unknown>;
+	const type = record['type'] as string | undefined;
 
-  if (type === "CallExpression") {
-    const callExpr = node as CallExpression;
-    const callee = callExpr.callee;
+	if (type === 'CallExpression') {
+		const callExpr = node as CallExpression;
+		const callee = callExpr.callee;
 
-    // Direct call: macroFn(...)
-    if (callee.type === "Identifier") {
-      const binding = bindingMap.get(callee.name);
-      if (binding) {
-        const staticArgs = callExpr.arguments.map((arg) => {
-          if (arg.type === "SpreadElement") {
-            throw new Error(
-              `[macros] Spread arguments are not supported in macro calls. ` +
-                `Found spread in call to '${binding.localName}'.`,
-            );
-          }
-          return evaluateStaticExpression(arg);
-        });
+		// Direct call: macroFn(...)
+		if (callee.type === 'Identifier') {
+			const binding = bindingMap.get(callee.name);
+			if (binding) {
+				const staticArgs = callExpr.arguments.map((arg) => {
+					if (arg.type === 'SpreadElement') {
+						throw new Error(
+							`[macros] Spread arguments are not supported in macro calls. ` +
+								`Found spread in call to '${binding.localName}'.`,
+						);
+					}
+					return evaluateStaticExpression(arg);
+				});
 
-        callsites.push({
-          binding,
-          end: callExpr.end,
-          start: callExpr.start,
-          staticArgs,
-        });
-      }
-    }
-  }
+				callsites.push({
+					binding,
+					end: callExpr.end,
+					start: callExpr.start,
+					staticArgs,
+				});
+			}
+		}
+	}
 
-  // Recurse into child properties
-  for (const key of Object.keys(record)) {
-    if (key === "parent") continue; // avoid circular refs
+	// Recurse into child properties
+	for (const key of Object.keys(record)) {
+		if (key === 'parent') continue; // avoid circular refs
 
-    const value = record[key];
-    if (value !== null && typeof value === "object") {
-      walkForCallExpressions(value, bindingMap, callsites);
-    }
-  }
+		const value = record[key];
+		if (value !== null && typeof value === 'object') {
+			walkForCallExpressions(value, bindingMap, callsites);
+		}
+	}
 }
