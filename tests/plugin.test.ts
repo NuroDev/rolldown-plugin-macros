@@ -8,7 +8,6 @@ import { evaluateStaticExpression, serializeToSource } from '../src/evaluate.js'
 import { clearModuleCache, executeMacro } from '../src/executor.js';
 
 const FIXTURES_DIR = path.resolve(__dirname, 'fixtures');
-const SIMPLE_MACROS = path.join(FIXTURES_DIR, 'simple-macros.js');
 
 describe('collectMacroImports', () => {
 	it('should detect import with { type: "macro" }', () => {
